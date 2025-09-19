@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Display para OBS (Atualizado)</title>
+    <style>
+        /* Estilos globais para o corpo */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte mais moderna */
+            color: black; /* Cor da fonte preta */
+            text-align: center;
+            background-color: transparent; /* Fundo totalmente transparente para o OBS */
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Garante que nada transborde */
+        }
+
+        /* Estilo para o container principal que alinha os elementos */
+        #main-container {
+            display: flex; /* Habilita o Flexbox para alinhar lado a lado */
+            align-items: center; /* Centraliza verticalmente os itens */
+            justify-content: center; /* Centraliza horizontalmente o grupo de itens */
+            height: 100vh; /* Ocupa a altura total da visualização (útil para OBS) */
+            padding: 20px; /* Um pouco de padding para não grudar nas bordas */
+            box-sizing: border-box; /* Inclui padding e borda na altura/largura total */
+            gap: 20px; /* Espaçamento entre a foto e o texto */
+        }
+
+        /* Estilo para a imagem de perfil */
+        #profile-pic {
+            width: 100px; /* Tamanho da imagem */
+            height: 100px; /* Tamanho da imagem */
+            border-radius: 50%; /* Deixa a imagem redonda */
+            /* border: none; */ /* Remove a borda vermelha, ou simplesmente comente/remova a linha */
+            object-fit: cover; /* Garante que a imagem cubra a área sem distorcer */
+            background-color: #eee; /* Fundo claro enquanto a imagem não carrega */
+        }
+
+        /* Estilo para o nome do inscrito */
+        #subscriber-info {
+            display: flex; /* Usa flexbox para o nome e contador (se adicionarmos) */
+            flex-direction: column; /* Organiza os itens em coluna */
+            align-items: flex-start; /* Alinha o texto à esquerda em relação à coluna */
+            color: black; /* Cor da fonte preta */
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5); /* Sombra branca suave para visibilidade */
+        }
+
+        #subscriber-name {
+            font-size: 32px; /* Tamanho da fonte para o nome */
+            margin: 0; /* Remove margens padrão */
+        }
+
+        #subscriber-count-display {
+            font-size: 18px; /* Tamanho da fonte para o contador */
+            color: #555; /* Um cinza mais suave para o contador */
+            margin-top: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="main-container">
+        <img id="profile-pic" src="" alt="Foto de Perfil do Inscrito">
+        
+        <div id="subscriber-info">
+            <div id="subscriber-name">Carregando...</div>
+            <!--<div id="subscriber-count-display">Total de Inscritos: ---</div>-->
+        </div>
+    </div>
+
+    <script>
+        function updateData() {
+            fetch('http://127.0.0.1:5000/current_data')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Atualiza o contador de inscritos
+                    //document.getElementById('subscriber-count-display').innerText = `Total de Inscritos: ${data.subscriberCount}`;
+
+                    // Se não houver um inscrito selecionado (primeira carga ou nenhum clicado ainda)
+                    if (data.currentSubscriberName === "Clique em 'Próximo Inscrito' para buscar o último!") {
+                        document.getElementById('subscriber-name').innerText = "Aguardando novo inscrito...";
+                        document.getElementById('profile-pic').src = ""; // Limpa a imagem
+                        document.getElementById('profile-pic').alt = "Nenhuma foto";
+                    } else {
+                        document.getElementById('subscriber-name').innerText = data.currentSubscriberName;
+                        document.getElementById('profile-pic').src = data.currentSubscriberPicture;
+                        document.getElementById('profile-pic').alt = `Foto de ${data.currentSubscriberName}`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar dados:', error);
+                    document.getElementById('subscriber-name').innerText = "Erro ao carregar dados.";
+                    document.getElementById('subscriber-count-display').innerText = "Total de Inscritos: N/A";
+                    document.getElementById('profile-pic').src = "";
+                });
+        }
+        
+        // Atualiza os dados a cada 3 segundos
+        setInterval(updateData, 3000);
+        // Chama uma vez no início para não ficar vazio
+        updateData();
+    </script>
+
+</body>
+</html>

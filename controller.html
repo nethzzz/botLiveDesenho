@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Controle da Live</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #f4f4f4; }
+        h1 { color: #333; }
+        .button-container { display: flex; justify-content: center; gap: 20px; }
+        button { 
+            font-size: 24px; 
+            padding: 15px 30px; 
+            cursor: pointer; 
+            border: none;
+            border-radius: 8px;
+            color: white;
+            transition: transform 0.1s ease;
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        #prevBtn { background-color: #6c757d; }
+        #nextBtn { background-color: #007bff; }
+        #status { margin-top: 30px; font-size: 18px; color: #555; height: 30px; }
+    </style>
+</head>
+<body>
+    <h1>Painel de Controle da Live</h1>
+    <div class="button-container">
+        <button id="prevBtn">⬅️ Inscrito Anterior</button>
+        <button id="nextBtn">Próximo Inscrito ➡️</button>
+    </div>
+    <p id="status"></p>
+
+    <script>
+        const statusEl = document.getElementById('status');
+
+        // Evento para o botão de PRÓXIMO
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            statusEl.innerText = 'Buscando próximo...';
+            
+            fetch('http://127.0.0.1:5000/next_subscriber')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.currentSubscriberName) {
+                        statusEl.innerText = `Exibindo agora: ${data.currentSubscriberName}`;
+                    } else {
+                        statusEl.innerText = 'Fim da fila. Verificando por novos...';
+                    }
+                })
+                .catch(err => {
+                    statusEl.innerText = 'Erro! Verifique o console do script Python.';
+                });
+        });
+
+        // Evento para o botão de ANTERIOR
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            statusEl.innerText = 'Voltando...';
+            
+            fetch('http://127.0.0.1:5000/previous_subscriber')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.currentSubscriberName) {
+                        statusEl.innerText = `Exibindo agora: ${data.currentSubscriberName}`;
+                    } else {
+                        statusEl.innerText = 'Já está no início do histórico.';
+                    }
+                })
+                .catch(err => {
+                    statusEl.innerText = 'Erro! Verifique o console do script Python.';
+                });
+        });
+    </script>
+</body>
+</html>

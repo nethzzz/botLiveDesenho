@@ -1,5 +1,5 @@
 # Fiz apenas para gravar o vídeo no meu canal!
-# Bot de Live do YouTube para Desenhar Inscritos
+# Usei IA para criar todos os comentarios de apoio e esse README, então se tiver algum erro acontece kkkkk
 
 Este é um projeto em Python que cria um sistema interativo para lives no YouTube. O bot identifica novos inscritos em tempo real, exibe o nome e a foto de perfil em uma interface para ser usada no OBS (ou qualquer software de streaming) e permite ao streamer navegar por uma fila de novos inscritos para que ninguém seja esquecido.
 Em seguida, tem outro bot que irá executar o desenho no espaço escolhido ou caso o usuario queira desenhar ele mesmo é só não rodar o bot.

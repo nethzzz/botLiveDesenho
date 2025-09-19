@@ -81,7 +81,10 @@ Este projeto requer credenciais da API do Google para funcionar.
 4.  **Use o Painel de Controle**:
     * Abra seu navegador e acesse `http://127.0.0.1:5000`.
     * Use os botões "Próximo Inscrito" e "Inscrito Anterior" para controlar as informações que aparecem na tela do OBS.
-5.  * Quando quiser rodar o bot use ´python botDesenho.py´
+5.  * Quando quiser rodar o bot use, ele irá usar automaticamente a foto baixada
+    ```bash
+    python botDesenho.py
+    ```
 
 ## 📁 Estrutura dos Arquivos
 
